@@ -1,0 +1,6 @@
+usr/local/bin/miracle-qt usr/bin
+share/pixmaps/miracle32.xpm usr/share/pixmaps
+share/pixmaps/miracle16.xpm usr/share/pixmaps
+share/pixmaps/miracle128.png usr/share/pixmaps
+debian/miracle-qt.desktop usr/share/applications
+debian/miracle-qt.protocol usr/share/kde4/services/

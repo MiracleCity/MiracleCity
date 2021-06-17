@@ -1,0 +1,22 @@
+[Unit]
+Description=Miracle's distributed currency daemon
+After=network.target
+
+[Service]
+User=miracle
+Group=miracle
+
+Type=forking
+PIDFile=/var/lib/miracled/miracled.pid
+ExecStart=/usr/bin/miracled -daemon -pid=/var/lib/miracled/miracled.pid \
+-conf=/etc/miracle/miracle.conf -datadir=/var/lib/miracled -disablewallet
+
+Restart=always
+PrivateTmp=true
+TimeoutStopSec=60s
+TimeoutStartSec=2s
+StartLimitInterval=120s
+StartLimitBurst=5
+
+[Install]
+WantedBy=multi-user.target

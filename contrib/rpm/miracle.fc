@@ -1,0 +1,8 @@
+/usr/bin/miracle-cli		--	gen_context(system_u:object_r:miracle_exec_t,s0)
+/usr/sbin/miracled		--	gen_context(system_u:object_r:miracle_exec_t,s0)
+/usr/lib(64)?/miracle/miracled		--	gen_context(system_u:object_r:miracle_exec_t,s0)
+
+/etc/miracle(/.*)?		gen_context(system_u:object_r:miracle_conf_t,s0)
+/var/lib/miracle(/.*)?		gen_context(system_u:object_r:miracle_var_lib_t,s0)
+
+(/var)?/run/miracled(/.*)?   gen_context(system_u:object_r:miracle_var_run_t,s0)

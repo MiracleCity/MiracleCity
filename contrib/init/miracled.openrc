@@ -1,0 +1,92 @@
+#!/sbin/runscript
+
+# backward compatibility for existing gentoo layout 
+#
+if [ -d "/var/lib/miracle/.miracle" ]; then
+	MIRACLED_DEFAULT_DATADIR="/var/lib/miracle/.miracle"
+else
+	MIRACLED_DEFAULT_DATADIR="/var/lib/miracled"
+fi
+
+MIRACLED_CONFIGFILE=${MIRACLED_CONFIGFILE:-/etc/miracle/miracle.conf}
+MIRACLED_PIDDIR=${MIRACLED_PIDDIR:-/var/run/miracled}
+MIRACLED_PIDFILE=${MIRACLED_PIDFILE:-${MIRACLED_PIDDIR}/miracled.pid}
+MIRACLED_DATADIR=${MIRACLED_DATADIR:-${MIRACLED_DEFAULT_DATADIR}}
+MIRACLED_USER=${MIRACLED_USER:-${MIRACLE_USER:-miracle}}
+MIRACLED_GROUP=${MIRACLED_GROUP:-miracle}
+MIRACLED_BIN=${MIRACLED_BIN:-/usr/bin/miracled}
+MIRACLED_NICE=${MIRACLED_NICE:-${NICELEVEL:-0}}
+MIRACLED_OPTS="${MIRACLED_OPTS:-${MIRACLE_OPTS}}"
+
+name="Miracle Core Daemon"
+description="Miracle cryptocurrency P2P network daemon"
+
+command="/usr/bin/miracled"
+command_args="-pid=\"${MIRACLED_PIDFILE}\" \
+		-conf=\"${MIRACLED_CONFIGFILE}\" \
+		-datadir=\"${MIRACLED_DATADIR}\" \
+		-daemon \
+		${MIRACLED_OPTS}"
+
+required_files="${MIRACLED_CONFIGFILE}"
+start_stop_daemon_args="-u ${MIRACLED_USER} \
+			-N ${MIRACLED_NICE} -w 2000"
+pidfile="${MIRACLED_PIDFILE}"
+
+# The retry schedule to use when stopping the daemon. Could be either
+# a timeout in seconds or multiple signal/timeout pairs (like
+# "SIGKILL/180 SIGTERM/300")
+retry="${MIRACLED_SIGTERM_TIMEOUT}"
+
+depend() {
+	need localmount net
+}
+
+# verify
+# 1) that the datadir exists and is writable (or create it)
+# 2) that a directory for the pid exists and is writable
+# 3) ownership and permissions on the config file
+start_pre() {
+	checkpath \
+	-d \
+	--mode 0750 \
+	--owner "${MIRACLED_USER}:${MIRACLED_GROUP}" \
+	"${MIRACLED_DATADIR}"
+
+	checkpath \
+	-d \
+	--mode 0755 \
+	--owner "${MIRACLED_USER}:${MIRACLED_GROUP}" \
+	"${MIRACLED_PIDDIR}"
+
+	checkpath -f \
+	-o ${MIRACLED_USER}:${MIRACLED_GROUP} \
+	-m 0660 \
+	${MIRACLED_CONFIGFILE}
+
+	checkconfig || return 1
+}
+
+checkconfig()
+{
+	if ! grep -qs '^rpcpassword=' "${MIRACLED_CONFIGFILE}" ; then
+		eerror ""
+		eerror "ERROR: You must set a secure rpcpassword to run miracled."
+		eerror "The setting must appear in ${MIRACLED_CONFIGFILE}"
+		eerror ""
+		eerror "This password is security critical to securing wallets "
+		eerror "and must not be the same as the rpcuser setting."
+		eerror "You can generate a suitable random password using the following "
+		eerror "command from the shell:"
+		eerror ""
+		eerror "bash -c 'tr -dc a-zA-Z0-9 < /dev/urandom | head -c32 && echo'"
+		eerror ""
+		eerror "It is recommended that you also set alertnotify so you are "
+		eerror "notified of problems:"
+		eerror ""
+		eerror "ie: alertnotify=echo %%s | mail -s \"Miracle Alert\"" \
+			"admin@foo.com"
+		eerror ""
+		return 1
+	fi
+}

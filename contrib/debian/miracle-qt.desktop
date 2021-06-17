@@ -1,0 +1,13 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Miracle Core
+Comment=Connect to the Miracle P2P Network
+Comment[de]=Verbinde mit dem Miracle peer-to-peer Netzwerk
+Comment[fr]=Miracle, monnaie virtuelle cryptographique pair à pair
+Comment[tr]=Miracle, eşten eşe kriptografik sanal para birimi
+Exec=miracle-qt %u
+Terminal=false
+Type=Application
+Icon=miracle128
+MimeType=x-scheme-handler/miracle;
+Categories=Office;Finance;

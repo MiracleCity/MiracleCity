@@ -1,0 +1,33 @@
+# /etc/conf.d/miracled: config file for /etc/init.d/miracled
+
+# Config file location
+#MIRACLED_CONFIGFILE="/etc/miracle/miracle.conf"
+
+# What directory to write pidfile to?  (created and owned by $MIRACLED_USER)
+#MIRACLED_PIDDIR="/var/run/miracled"
+
+# What filename to give the pidfile
+#MIRACLED_PIDFILE="${MIRACLED_PIDDIR}/miracled.pid"
+
+# Where to write miracled data (be mindful that the blockchain is large)
+#MIRACLED_DATADIR="/var/lib/miracled"
+
+# User and group to own miracled process
+#MIRACLED_USER="miracle"
+#MIRACLED_GROUP="miracle"
+
+# Path to miracled executable
+#MIRACLED_BIN="/usr/bin/miracled"
+
+# Nice value to run miracled under
+#MIRACLED_NICE=0
+
+# Additional options (avoid -conf and -datadir, use flags above)
+#MIRACLED_OPTS=""
+
+# The timeout in seconds OpenRC will wait for miracled to terminate
+# after a SIGTERM has been raised.
+# Note that this will be mapped as argument to start-stop-daemon's
+# '--retry' option, which means you can specify a retry schedule
+# here. For more information see man 8 start-stop-daemon.
+MIRACLED_SIGTERM_TIMEOUT=60
