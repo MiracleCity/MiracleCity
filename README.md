@@ -8,7 +8,7 @@ out collectively by the network. Miracle Core is the name of open source
 software which enables the use of this currency.
 
 For more information, as well as an immediately useable, binary version of
-the Miracle Core software, see https://mcam.network.
+the Miracle Core software, see https://miraclecity.io.
 
 License
 -------
